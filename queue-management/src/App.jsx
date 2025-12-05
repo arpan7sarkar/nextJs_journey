@@ -9,7 +9,7 @@ const App = () => {
     setQueue([...queue, { ...customers, id: Date.now(), status: "waiting" }]);
   };
   const removeFromQueue = (id) => {
-    setQueue(queue.filer((customer) => customer.id !== id));
+    setQueue(queue.filter((customer) => customer.id !== id));
   };
   const updateStatus = (id, newStatus) =>{
     setQueue(
