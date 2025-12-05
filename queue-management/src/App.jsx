@@ -7,8 +7,16 @@ const App = () => {
   const addToQueue = (customers) => {
     setQueue([...queue, { ...customers, id: Date.now(), status: "waiting" }]);
   };
-  const removeFromQueue = (id) => {};
-  const updateStatus = (id, newStatus) => {};
+  const removeFromQueue = (id) => {
+    setQueue(queue.filer(customer => customer.id !== id));
+  };
+  const updateStatus = (id, newStatus) => {
+    setQueue(
+      queue.map((customer) =>
+        customer.id === id ? { ...customer, status: newStatus } : customer
+      )
+    );
+  };
   return (
     <div>
       <header>
