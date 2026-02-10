@@ -1,50 +1,229 @@
-Next js follows file based routing
-each file name means refering to each route
-that means if i create a file called signup inside it i write page.tsx then after npm run dev going to /signup i will see the content
+## Router in Next.js
 
-In case of too much of dynamic nested routing we sometiems face a big problem that is so much folders needs to get created for resolving this problem we have a saviour 
-**catch all segment** synatx **[...param]**
+### What is a Router?
+A **router** is responsible for managing **navigation between different pages** in an application.
 
-we also have advanced version of it 
-**optional catch all page segment** synatx **[[...param]]**
-this will also gonna handle if no dynamic route had been provided
+---
 
-Try to use only one at a time 
+### Routers in Next.js
+Next.js provides **two routing systems**:
 
-##### Route group
-suppose you want to structure the folder a little like putting all the auth related folders ( signin , signup eg) . but will have a issue for hitting this route 
-you have to write something like /auth/signin this willl revel your folder structure also makuing url look worser it will better if it looks like /signin 
-for achiving /auth/signin -> /sigin all we have to do is wrapping the folder with () ex  renaming folder auth to (auth) now you have access for /signin directly
+1. **Page Router (Older Way)**
+   - Based on the `pages/` directory
+   - Uses file-based routing
+   - Still supported, but **considered old**
+   - Rarely used in new projects
 
- ##### Private folders
- suppose you want to create a specific folder but you don't want next js to track it and think  it as route then you have to use private folders 
- before writing folder name just add a **Underscore _** then it will become private
- eg : utils ❌ _utils✅
- usecase ( suppose in a route create a compontet folder then write _components)
+2. **App Router (New Approach)**
+   - Based on the `app/` directory
+   - Modern and recommended by Next.js
+   - Supports layouts, nested routes, and better data handling
+   - Preferred choice for new applications
+```md
+## Next.js File-Based Routing
 
+### File-Based Routing
+Next.js follows **file-based routing**.
+- Each **folder / file name maps to a route**
+- Creating a file automatically creates a URL
 
- ##### Intersepting page
- Intersepting page are type of page that popup to layout ( like popup, model , drawer)
- the url stilll updates that means it changes the page proeprly
- same level -> (.)
- 1 level up -> (..)
- 2 level up -> (..)(..)
- from root -> (...)
+**Example:**
+```
 
+app/signup/page.tsx
 
-##### Parallal routes
-its let you render parallal pages , layouts in a single one , 
-ex:: Leetcode coding page
-procedure :
-    you define slots where each page will render 
-    each slot can have its own navigation , state, error-boundaries , even ve conditionally
+````
+After `npm run dev`, visiting  
+👉 `/signup` will render the content of `page.tsx`
 
-for creating parrallal route you have to at first define a route (folder)
-    then have to write layout.tsx , page.tsx then after that 
-    which ever page you want to add as parrallar route you have to name the folder as 
-    @folder-name
-Unmatched route:
-    whenever using parallal routes if you face problems like , after relod it says 404 or in any other case any routing issue error that returns 404 
-    you can control it using unmatched route , just have to write default.tsx at the root level of that route
-Custom 404 Page :
-        
+---
+
+### Dynamic & Nested Routing Problem
+With deeply nested dynamic routes, we may need to create **many folders**, which becomes messy.
+
+To solve this, Next.js provides **Catch-All Segments**.
+
+---
+
+### Catch-All Segment
+**Syntax:**  
+```txt
+[...param]
+````
+
+* Captures **multiple dynamic route segments**
+* Useful for deeply nested dynamic routes
+
+---
+
+### Optional Catch-All Segment
+
+**Syntax:**
+
+```txt
+[[...param]]
+```
+
+* Advanced version of catch-all
+* Works **even when no dynamic route is provided**
+* Handles both `/route` and `/route/anything`
+
+⚠️ Use **only one** at a time (catch-all OR optional catch-all)
+
+---
+
+### Route Groups
+
+Used for **organizing folders without affecting URLs**.
+
+**Problem:**
+
+```
+/auth/signin
+```
+
+Reveals folder structure and makes URL longer.
+
+**Solution:**
+Wrap the folder name in parentheses.
+
+```
+(auth)/signin/page.tsx
+```
+
+Now the route becomes:
+
+```
+/signin
+```
+
+Folder structure stays clean, URL stays simple.
+
+---
+
+### Private Folders
+
+Private folders are **ignored by the router**.
+
+**Syntax:** Prefix folder name with `_`
+
+❌ `utils`
+✅ `_utils`
+
+**Use case:**
+
+* Storing helper files
+* Components inside a route
+
+Example:
+
+```
+_components/
+```
+
+---
+
+### Intercepting Pages
+
+Intercepting pages are used for **popups, modals, drawers**, etc.
+
+* Page appears as an overlay
+* URL still updates correctly
+
+**Navigation levels:**
+
+* Same level → `(.)`
+* 1 level up → `(..)`
+* 2 levels up → `(..)(..)`
+* From root → `(...)`
+
+---
+
+### Parallel Routes
+
+Parallel routes allow rendering **multiple pages or layouts in parallel**.
+
+**Example:**
+LeetCode-style coding page (editor, testcases, description)
+
+**How it works:**
+
+1. Define a route folder
+2. Add `layout.tsx` and `page.tsx`
+3. Create parallel routes using:
+
+```
+@folder-name
+```
+
+**Features:**
+
+* Each route has its own:
+
+  * Navigation
+  * State
+  * Error boundaries
+* Can be conditionally rendered
+
+---
+
+### Unmatched Routes (Parallel Routes)
+
+If after reload or navigation you get **404 errors**, use:
+
+```txt
+default.tsx
+```
+
+Place it at the **root level of that route** to handle unmatched cases.
+
+---
+
+### Components in Next.js
+
+#### Server Components
+
+1. **Default** component type in Next.js
+2. Rendered on the **server**
+3. Output is **static HTML or minimal JS**
+4. Best for **performance**
+
+**Notes:**
+
+* `console.log` runs in the **terminal**
+* Browser shows a **server flag**
+* Can use built-in APIs like `fetch`, `os`
+
+**Advantages:**
+
+1. Secure data fetching
+2. Direct DB queries, API calls, file access
+3. Smaller JS sent to client
+
+**Disadvantages:**
+
+1. No browser APIs (`window`, `document`)
+2. No React hooks (`useState`, `useEffect`)
+3. Interactivity requires Client Components
+
+---
+
+#### Client Components
+
+1. Run in the **browser**
+2. Used for **interactivity**
+
+   * Buttons
+   * Forms
+   * Animations
+   * State management
+3. Must start with:
+
+```ts
+"use client";
+```
+
+📌 Use Client Components **only when needed** to keep performance high.
+
+```
+```
