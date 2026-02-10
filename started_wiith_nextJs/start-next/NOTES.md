@@ -21,3 +21,10 @@ for achiving /auth/signin -> /sigin all we have to do is wrapping the folder wit
  before writing folder name just add a **Underscore _** then it will become private
  eg : utils ❌ _utils✅
  usecase ( suppose in a route create a compontet folder then write _components)
+
+
+ ##### Intersepting page
+ Intersepting page are type of page that popup to layout ( like popup, model , drawer)
+ the url stilll updates that means it changes the page proeprly
+ same level -> (.)
+ multilevel -> (..)
