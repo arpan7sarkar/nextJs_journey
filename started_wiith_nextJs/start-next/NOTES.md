@@ -27,4 +27,19 @@ for achiving /auth/signin -> /sigin all we have to do is wrapping the folder wit
  Intersepting page are type of page that popup to layout ( like popup, model , drawer)
  the url stilll updates that means it changes the page proeprly
  same level -> (.)
- multilevel -> (..)
+ 1 level up -> (..)
+ 2 level up -> (..)(..)
+ from root -> (...)
+
+
+##### Parallal routes
+its let you render parallal pages , layouts in a single one , 
+ex:: Leetcode coding page
+procedure :
+    you define slots where each page will render 
+    each slot can have its own navigation , state, error-boundaries , even ve conditionally
+
+for creating parrallal route you have to at first define a route (folder)
+    then have to write layout.tsx , page.tsx then after that 
+    which ever page you want to add as parrallar route you have to name the folder as 
+    @folder-name
