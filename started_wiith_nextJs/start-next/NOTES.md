@@ -11,3 +11,13 @@ this will also gonna handle if no dynamic route had been provided
 
 Try to use only one at a time 
 
+##### Route group
+suppose you want to structure the folder a little like putting all the auth related folders ( signin , signup eg) . but will have a issue for hitting this route 
+you have to write something like /auth/signin this willl revel your folder structure also makuing url look worser it will better if it looks like /signin 
+for achiving /auth/signin -> /sigin all we have to do is wrapping the folder with () ex  renaming folder auth to (auth) now you have access for /signin directly
+
+ ##### Private folders
+ suppose you want to create a specific folder but you don't want next js to track it and think  it as route then you have to use private folders 
+ before writing folder name just add a **Underscore _** then it will become private
+ eg : utils ❌ _utils✅
+ usecase ( suppose in a route create a compontet folder then write _components)
