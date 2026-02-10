@@ -43,3 +43,8 @@ for creating parrallal route you have to at first define a route (folder)
     then have to write layout.tsx , page.tsx then after that 
     which ever page you want to add as parrallar route you have to name the folder as 
     @folder-name
+Unmatched route:
+    whenever using parallal routes if you face problems like , after relod it says 404 or in any other case any routing issue error that returns 404 
+    you can control it using unmatched route , just have to write default.tsx at the root level of that route
+Custom 404 Page :
+        
