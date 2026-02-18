@@ -227,3 +227,98 @@ Place it at the **root level of that route** to handle unmatched cases.
 
 ```
 ```
+
+
+Query params Cookies , Headers , Cookie
+Query parameter are key value pairs that we add at the end of a url to pass extra information to the server
+
+ex : url / xyz ?key = value
+
+?key=value is the way for using query parameter
+use 
+1. filer
+2. searching 
+3. pagination
+   ``` ts
+   const searchParams = request.nextUrl.searchParams;
+
+   ``` 
+
+headers == metadata send by http request /responce
+
+1. request header
+   1. Carry info about the incoming request
+   2. user-agent ->client
+   3. accept , authorization
+2. respose headers
+   1. send back with response
+   2. content type application json , cache control , set cookie
+3. 
+``` ts
+two way 
+
+   using inbuiild headers class
+    const requestHeader = new Headers(request.headers);
+    const authHeader = requestHeader.get("Authorization");
+
+
+// using next js headers
+    const headerList = await headers();// headers is comming from next js
+    const authHeader2= headerList.get("Authorization");
+
+
+
+   for returning / returning header
+   2 approch
+
+   return NextResponse.json({
+        data: "Hello world from profile"
+    }, {
+        headers: {
+            "names": "Arpan, Lol",
+            "ok":"Yes bro"
+        }
+    })
+
+    return new Response("<h1>Hello Bro</h1>" ,{
+        headers:{
+            "Content-Type":"text/html",
+            "CustomHeader":"its custom",
+
+        }
+    });
+
+```
+
+
+#### Cokies 
+cookies = small pieces of data stored in the browser and automatically send back with every request to the same server
+
+1. Session managment : Logins , shoping cart
+2. Personalization : Themes , Language prefrences 
+3. Trackign : Analytics , behavior tracking
+
+``` js 
+
+import {NextResponse} from "next/server"
+import { cookies} from "next/headers"
+export async function GET(request) {
+    
+    const randomCookie = request.cookies.get("randomCookie");
+
+    const cookieStore = await cookies()
+    const randomCookie2 = cookieStore.get("randomCookie");
+
+    return NextResponse.json({
+        message:"Cookie read succsessfully"
+    },{
+        // setting the cookie
+        headers:{
+            "Set-Cookie":"randomCookie = value"
+        }
+    })
+}
+    cookieStore.set("randomCookie","value")
+    cookieStore.delete("randomCookie")
+
+```
