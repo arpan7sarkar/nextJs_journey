@@ -289,3 +289,36 @@ two way
     });
 
 ```
+
+
+#### Cokies 
+cookies = small pieces of data stored in the browser and automatically send back with every request to the same server
+
+1. Session managment : Logins , shoping cart
+2. Personalization : Themes , Language prefrences 
+3. Trackign : Analytics , behavior tracking
+
+``` js 
+
+import {NextResponse} from "next/server"
+import { cookies} from "next/headers"
+export async function GET(request) {
+    
+    const randomCookie = request.cookies.get("randomCookie");
+
+    const cookieStore = await cookies()
+    const randomCookie2 = cookieStore.get("randomCookie");
+
+    return NextResponse.json({
+        message:"Cookie read succsessfully"
+    },{
+        // setting the cookie
+        headers:{
+            "Set-Cookie":"randomCookie = value"
+        }
+    })
+}
+    cookieStore.set("randomCookie","value")
+    cookieStore.delete("randomCookie")
+
+```
