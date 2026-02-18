@@ -30,8 +30,16 @@ export async function GET(request) {
         // we have to use get for getting something from param
         const name  = searchParams.get("name");
         const age  = searchParams.get("age");
+        let filterUser = users;
 
-        return NextResponse.json({ success: true, data: users });
+        if(name){
+            filterUser = filterUser.filter(user => user.name === name);
+        }
+        if(age){
+            filterUser = filterUser.filter(user => user.age === parseInt(age));
+        }
+
+        return NextResponse.json({ success: true, data: filterUser });
     } catch (error) {
         return NextResponse.json({ success: false, error: "some error is occured" })
     }
