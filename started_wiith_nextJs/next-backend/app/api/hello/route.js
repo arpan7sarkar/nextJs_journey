@@ -23,8 +23,14 @@ export const users = [
 ];
 
 
-export async function GET() {
+export async function GET(request) {
     try {
+
+        const searchParams = request.nextUrl.searchParams;
+        // we have to use get for getting something from param
+        const name  = searchParams.get("name");
+        const age  = searchParams.get("age");
+
         return NextResponse.json({ success: true, data: users });
     } catch (error) {
         return NextResponse.json({ success: false, error: "some error is occured" })

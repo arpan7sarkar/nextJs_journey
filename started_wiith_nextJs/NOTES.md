@@ -227,3 +227,15 @@ Place it at the **root level of that route** to handle unmatched cases.
 
 ```
 ```
+
+
+Query params Cookies , Headers , Cookie
+Query parameter are key value pairs that we add at the end of a url to pass extra information to the server
+
+ex : url / xyz ?key = value
+
+?key=value is the way for using query parameter
+use 
+1. filer
+2. searching 
+3. pagination
