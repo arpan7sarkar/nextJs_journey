@@ -239,3 +239,53 @@ use
 1. filer
 2. searching 
 3. pagination
+   ``` ts
+   const searchParams = request.nextUrl.searchParams;
+
+   ``` 
+
+headers == metadata send by http request /responce
+
+1. request header
+   1. Carry info about the incoming request
+   2. user-agent ->client
+   3. accept , authorization
+2. respose headers
+   1. send back with response
+   2. content type application json , cache control , set cookie
+3. 
+``` ts
+two way 
+
+   using inbuiild headers class
+    const requestHeader = new Headers(request.headers);
+    const authHeader = requestHeader.get("Authorization");
+
+
+// using next js headers
+    const headerList = await headers();// headers is comming from next js
+    const authHeader2= headerList.get("Authorization");
+
+
+
+   for returning / returning header
+   2 approch
+
+   return NextResponse.json({
+        data: "Hello world from profile"
+    }, {
+        headers: {
+            "names": "Arpan, Lol",
+            "ok":"Yes bro"
+        }
+    })
+
+    return new Response("<h1>Hello Bro</h1>" ,{
+        headers:{
+            "Content-Type":"text/html",
+            "CustomHeader":"its custom",
+
+        }
+    });
+
+```
