@@ -322,3 +322,9 @@ export async function GET(request) {
     cookieStore.delete("randomCookie")
 
 ```
+
+
+
+``` TS
+
+In next js we can create multiple routes in single file (eg get , post , put all in one file) 
