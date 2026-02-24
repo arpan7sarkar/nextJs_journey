@@ -28,7 +28,7 @@ export default async function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[calc(100vh-2rem) flex flex-col gap-4]`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[calc(100vh-2rem)] flex flex-col gap-4`}
         >
           <ConvexClientProvider>
             <main className="px-2 md:px-4 grow flex flex-col">

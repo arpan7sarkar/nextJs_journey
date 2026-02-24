@@ -5,21 +5,21 @@ import { UserDropdown } from "./user-dropdown";
 
 export default async function UserDetails() {
 	const user = await fetchQuery(
-		api.users.currentUsers, 
+		api.users.currentUser,
 		{},
 		{ token: await convexAuthNextjsToken() }
 	);
 
 	if (!user) {
-		
+
 		return null;
 	}
 
 	return (
 		<UserDropdown
-			name={user.name}
+			name={user.name?.charAt(0) || user.email || "Guest"}
 			email={user.email}
-			pictureUrl={user.image}
+			pictureUrl={user.image || user.picture}
 		/>
 	);
 }
