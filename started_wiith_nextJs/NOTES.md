@@ -229,102 +229,182 @@ Place it at the **root level of that route** to handle unmatched cases.
 ```
 
 
-Query params Cookies , Headers , Cookie
-Query parameter are key value pairs that we add at the end of a url to pass extra information to the server
+### Network & Data: Parameters, Headers, and Cookies
 
-ex : url / xyz ?key = value
+#### 1. Query Parameters
+Query parameters (e.g., `/search?q=nextjs`) are used to pass key-value pairs at the end of a URL.
 
-?key=value is the way for using query parameter
-use 
-1. filer
-2. searching 
-3. pagination
-   ``` ts
-   const searchParams = request.nextUrl.searchParams;
+**Common Use Cases:**
+*   **Filtering:** `?category=electronics`
+*   **Searching:** `?q=laptop`
+*   **Pagination:** `?page=2&limit=10`
 
-   ``` 
+**Syntax in API Routes (`route.js`):**
+```typescript
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get("query");
+    return Response.json({ query });
+}
+```
 
-headers == metadata send by http request /responce
+#### 2. HTTP Headers
+Headers provide metadata about the request or response.
 
-1. request header
-   1. Carry info about the incoming request
-   2. user-agent ->client
-   3. accept , authorization
-2. respose headers
-   1. send back with response
-   2. content type application json , cache control , set cookie
-3. 
-``` ts
-two way 
+*   **Request Headers:** `User-Agent` (client info), `Authorization` (JWT token), `Accept` (content type).
+*   **Response Headers:** `Content-Type`, `Cache-Control`, `Set-Cookie`.
 
-   using inbuiild headers class
-    const requestHeader = new Headers(request.headers);
-    const authHeader = requestHeader.get("Authorization");
+**Usage in Next.js:**
+```typescript
+import { headers } from "next/headers";
 
+export async function GET(request: Request) {
+    // 1. Using standard Headers class
+    const requestHeaders = new Headers(request.headers);
+    const auth = requestHeaders.get("Authorization");
 
-// using next js headers
-    const headerList = await headers();// headers is comming from next js
-    const authHeader2= headerList.get("Authorization");
+    // 2. Using Next.js headers() function (Server Components/API Routes)
+    const headersList = await headers();
+    const specificHeader = headersList.get("User-Agent");
 
-
-
-   for returning / returning header
-   2 approch
-
-   return NextResponse.json({
-        data: "Hello world from profile"
-    }, {
+    // Setting Response Headers
+    return new Response(JSON.stringify({ message: "Done" }), {
+        status: 200,
         headers: {
-            "names": "Arpan, Lol",
-            "ok":"Yes bro"
-        }
-    })
-
-    return new Response("<h1>Hello Bro</h1>" ,{
-        headers:{
-            "Content-Type":"text/html",
-            "CustomHeader":"its custom",
-
+            "Content-Type": "application/json",
+            "X-Custom-Header": "next-js-app"
         }
     });
-
-```
-
-
-#### Cokies 
-cookies = small pieces of data stored in the browser and automatically send back with every request to the same server
-
-1. Session managment : Logins , shoping cart
-2. Personalization : Themes , Language prefrences 
-3. Trackign : Analytics , behavior tracking
-
-``` js 
-
-import {NextResponse} from "next/server"
-import { cookies} from "next/headers"
-export async function GET(request) {
-    
-    const randomCookie = request.cookies.get("randomCookie");
-
-    const cookieStore = await cookies()
-    const randomCookie2 = cookieStore.get("randomCookie");
-
-    return NextResponse.json({
-        message:"Cookie read succsessfully"
-    },{
-        // setting the cookie
-        headers:{
-            "Set-Cookie":"randomCookie = value"
-        }
-    })
 }
-    cookieStore.set("randomCookie","value")
-    cookieStore.delete("randomCookie")
+```
 
+#### 3. Cookies
+Cookies are small pieces of data stored in the browser and automatically sent back to the same server on every request.
+
+**Common Use Cases:**
+*   **Session Management:** Login state, shopping carts.
+*   **Personalization:** Themes, language settings.
+*   **Analytics:** Tracking user behavior.
+
+**Syntax in API Routes:**
+```javascript
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+
+export async function GET(request) {
+    // Reading Cookies
+    const cookieStore = await cookies();
+    const myCookie = cookieStore.get("sessionID");
+
+    // Setting Cookies
+    const response = NextResponse.json({ message: "Cookie set!" });
+    response.cookies.set("theme", "dark", {
+        path: "/",
+        httpOnly: true, // Secure practice
+        maxAge: 60 * 60 * 24 // 1 day
+    });
+
+    return response;
+}
+```
+
+### Data Fetching and Caching
+
+#### `fetch` API and Caching Behaviors in Next.js
+
+Next.js extends the native `fetch` API to allow for granular control over caching and revalidation on the server.
+
+1.  **Default Behavior (Dynamic Fetching)**
+    *   By default, `fetch` behaves based on the rendering context. In Server Components, it might be cached or dynamic depending on other factors (like `cookies()` or `headers()` usage).
+
+2.  **Force Cache (Static Data)**
+    *   Stores the result in the Data Cache. Subsequent requests will hit the cache instead of the origin server.
+    *   **Use Case:** Data that rarely changes (e.g., blog posts, product descriptions).
+
+```javascript
+const data = await fetch("https://api.example.com/data", {
+    cache: "force-cache"
+});
+```
+
+3.  **No Cache (Live Data)**
+    *   Fetches the data from the source on every request.
+    *   **Use Case:** Real-time data, dashboards, user-specific data.
+
+```javascript
+const data = await fetch("https://api.example.com/data", {
+    cache: "no-store"
+});
+```
+
+4.  **Incremental Static Regeneration (ISR / Revalidate)**
+    *   Caches the data for a specific duration (in seconds).
+    *   **Use Case:** Data that updates periodically (e.g., world news, stock prices).
+
+```javascript
+const data = await fetch("https://api.example.com/data", {
+    next: { revalidate: 10 } // Cache for 10 seconds
+});
 ```
 
 
+### Client-Side Hooks
 
-``` TS
+Next.js provides specific hooks to access routing and URL information in **Client Components** (`"use client"`).
 
-In next js we can create multiple routes in single file (eg get , post , put all in one file) 
+#### 1. `useParams`
+Used to access dynamic route parameters (e.g., `[id]`).
+*   **Context:** Dynamic segments like `[user]` or `[...slug]`.
+*   **Return Type:** Object (for regular segments) or Array (for catch-all segments).
+
+```javascript
+"use client";
+import { useParams } from "next/navigation";
+
+const UserPage = () => {
+    const params = useParams();
+    return <h1>User ID: {params.id}</h1>;
+}
+```
+
+#### 2. `usePathname`
+Returns the current URL's **pathname** (e.g., `/dashboard/profile`).
+*   Does **not** include query parameters (`?q=...`) or hashes (`#top`).
+*   Useful for conditional rendering or tracking current routes.
+
+#### 3. `useSearchParams`
+Reads and interacts with query parameters in the current URL.
+*   **Common Use Cases:** Dynamic filtering, deep linking, and pagination.
+*   **Multiple Values:** Handles keys with multiple values like `?tags=js&tags=react`.
+
+```javascript
+"use client";
+import { useSearchParams } from "next/navigation";
+
+const Products = () => {
+    const searchParams = useSearchParams();
+    const category = searchParams.get("category");
+    return <p>Showing products for {category}</p>;
+}
+```
+
+#### 4. `useRouter`
+Provides programmatical navigation (e.g., pushing routes, replacing history).
+
+```javascript
+"use client";
+import { useRouter } from "next/navigation";
+
+const Login = () => {
+    const router = useRouter();
+    const handleLogin = () => {
+        router.push("/dashboard");
+    };
+    return <button onClick={handleLogin}>Login</button>;
+}
+```
+
+---
+
+##### 404 - Not Found Pages
+To replace the default Next.js 404 page, simply create a file named `not-found.tsx` (or `.js`) in the `app/` directory or inside any specific route segment.
